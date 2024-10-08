@@ -33,6 +33,7 @@ File structure:
 
 ## Running the Application
 (npm install)
+
 node server/index.js
 
 Navigate to http://localhost:3000. From here, you can create a room or join one using a code. The game state is synchronized through Colyseus.
