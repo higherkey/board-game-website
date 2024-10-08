@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boggle Game</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Include Socket.IO client -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Pass roomId from the server to the client -->
+    <script>
+        const roomId = '<%= roomId %>';
+    </script>
+    
+    <!-- Game logic for this specific room -->
+    <script src="/js/game.js"></script>
+</head>
+<body>
+    <h1>Boggle Room: <%= roomId %></h1>
+
+    <!-- Section to display connected players -->
+    <div id="players">
+        <h3>Connected Players:</h3>
+        <ul id="playersList"></ul>
+    </div>
+
+    <!-- Button to start the game (for room creator) -->
+    <button id="startGame">Start Game</button>
+
+    <!-- Game board placeholder -->
+    <div id="gameBoard">
+        <h3>Game Board will appear here</h3>
+        <!-- You can dynamically create the Boggle board here when the game starts -->
+    </div>
+
+    <!-- Client-side logic to manage player connections and start the game -->
+    <script>
+        // Connect to the server via Socket.IO
+        const socket = io();
+
+        // Emit event to join the room with the room ID
+        socket.emit('join_room', roomId);
+
+        // Listen for the list of connected players and update the UI
+        socket.on('players_update', (players) => {
+            const playersList = document.getElementById('playersList');
+            playersList.innerHTML = '';  // Clear the list first
+            players.forEach(player => {
+                const li = document.createElement('li');
+                li.textContent = player;  // Assuming 'player' is just the player's name or ID
+                playersList.appendChild(li);
+            });
+        });
+
+        // Handle the Start Game button (only available for the room creator)
+        document.getElementById('startGame').addEventListener('click', function() {
+            socket.emit('start_game', roomId);  // Send the event to start the game
+        });
+
+        // Listen for the game start event from the server
+        socket.on('game_started', () => {
+            document.getElementById('gameBoard').innerHTML = '<h3>Game is starting!</h3>';
+            // You can add logic here to display the Boggle board
+        });
+
+        // Listen for error messages from the server (e.g., if a non-creator tries to start the game)
+        socket.on('error_message', (message) => {
+            alert(message);
+        });
+    </script>
+</body>
+</html>

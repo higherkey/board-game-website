@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Board Game Site</h1>
+
+    <div id="createGame">
+        <form action="/game/new" method="POST">
+            <button>Create Game</button>
+        </form>
+    </div>
+
+    <div id="joinGame">
+        <form action="/game/join" method="GET">
+            <input type="text" name="roomId" placeholder="Enter Room Code" required>
+            <button>Join Game</button>
+        </form>
+    </div>
+</body>
+</html>
